@@ -1,5 +1,6 @@
 /* Advent of Code 2023, Day 4: Scratchcards
  * Adrien Abbey, Jan. 2024
+ * Part One Solution: 20407
  */
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.util.Scanner;
 
 class day4 {
     /* Global Variables */
-    public static String inputFileName = "example-input.txt";
+    public static String inputFileName = "input.txt";
     public static boolean testing = false;
 
     public static void main(String[] args) throws FileNotFoundException {
