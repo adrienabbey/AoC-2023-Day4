@@ -130,29 +130,4 @@ class day4 {
         // Return the number of matches:
         return matches;
     }
-
-    public static int findCopies(ArrayList<String> cardList, int cardIndex) {
-        // Looks at the card in the card list, determining the number of matches
-        // it has, then calculates the number of copies it creates recursively.
-        // It then returns the total number of card copies created by itself and
-        // all its created copies, if any. If no copies are found, it still
-        // returns 1 (itself).
-
-        // Track how many copies to return:
-        int copies = 1;
-
-        // Find the number of matches for the given card:
-        int matches = findMatches(cardList.get(cardIndex));
-
-        // Recursively determine how many copies to add based on matches:
-        for (int i = matches; i > 0; i--) {
-            if (cardIndex + i < cardList.size()) {
-                int additionalMatches = findCopies(cardList, cardIndex + i);
-                copies += additionalMatches;
-            }
-        }
-
-        // Return the total number of card copies created:
-        return copies;
-    }
 }
