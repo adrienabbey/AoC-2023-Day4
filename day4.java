@@ -1,6 +1,7 @@
 /* Advent of Code 2023, Day 4: Scratchcards
  * Adrien Abbey, Jan. 2024
  * Part One Solution: 20407
+ * Part Two Solution: 23806951
  */
 
 import java.io.File;
@@ -13,21 +14,48 @@ class day4 {
     /* Global Variables */
     public static String inputFileName = "input.txt";
     public static boolean testing = false;
+    public static boolean partTwo = true;
 
     public static void main(String[] args) throws FileNotFoundException {
         // Load the input file into an array list of strings:
         ArrayList<String> inputStrings = loadInputStrings();
 
+        // Track the number of copies of each card:
+        int[] cardCopyList = new int[inputStrings.size()];
+        for (int i = 0; i < inputStrings.size(); i++) {
+            cardCopyList[i] = 1;
+        }
+
         // Track the total score sum:
         int totalScore = 0;
 
-        // For each string in the input:
-        for (String cardString : inputStrings) {
-            // Find the card's value:
-            int cardValue = findCardValue(cardString);
+        // Calculate using Part One's method:
+        if (!partTwo) {
+            // For each string in the input:
+            for (String cardString : inputStrings) {
+                // Find the card's value:
+                int matches = findMatches(cardString);
 
-            // Add that card's value to the total score:
-            totalScore += cardValue;
+                // Add that card's value to the total score:
+                totalScore += Math.pow(2, matches - 1);
+            }
+        } else {
+            // Calculate using Part Two's method.
+
+            // For each card in the list:
+            for (int i = 0; i < inputStrings.size(); i++) {
+                // Find the number of matches for that card:
+                int matches = findMatches(inputStrings.get(i));
+                // Add that many copies of the subsequent cards:
+                for (int j = 1; j <= matches; j++) {
+                    cardCopyList[i + j] += cardCopyList[i];
+                }
+            }
+
+            // Calculate the total score, which is the total number of cards:
+            for (int count : cardCopyList) {
+                totalScore += count;
+            }
         }
 
         // Print out the score result:
@@ -55,8 +83,8 @@ class day4 {
         return inputStrings;
     }
 
-    public static int findCardValue(String cardString) {
-        // Finds the winning value of a given card, if any.
+    public static int findMatches(String cardString) {
+        // Finds and returns the number of matches for the given card.
 
         // Separate the card name and number from the string:
         String[] firstSplit = cardString.split(":");
@@ -70,7 +98,6 @@ class day4 {
 
         // Track the number of matches:
         int matches = 0;
-        double cardValue = 0;
 
         // Check the lists for any matches:
         for (String winningNumber : winningNumbers) {
@@ -91,22 +118,16 @@ class day4 {
             }
         }
 
-        // Calculate the card's value:
-        if (matches > 0) {
-            cardValue = Math.pow(2, matches - 1);
-        }
-
         // Test code:
         if (testing) {
             System.out.println(" Card string: " + cardString);
             System.out.println(" Given numbers: " + Arrays.toString(givenNumbers));
             System.out.println(" Winning numbers; " + Arrays.toString(winningNumbers));
             System.out.println(" Matches: " + matches);
-            System.out.println(" Card value: " + cardValue);
             System.out.println(" - ");
         }
 
-        // Return the card's value:
-        return (int) cardValue;
+        // Return the number of matches:
+        return matches;
     }
 }
