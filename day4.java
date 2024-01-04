@@ -19,6 +19,12 @@ class day4 {
         // Load the input file into an array list of strings:
         ArrayList<String> inputStrings = loadInputStrings();
 
+        // Track the number of copies of each card:
+        int[] cardCopyList = new int[inputStrings.size()];
+        for (int i = 0; i < inputStrings.size(); i++) {
+            cardCopyList[i] = 1;
+        }
+
         // Track the total score sum:
         int totalScore = 0;
 
@@ -35,19 +41,19 @@ class day4 {
         } else {
             // Calculate using Part Two's method.
 
-            // For every string in the input:
+            // For each card in the list:
             for (int i = 0; i < inputStrings.size(); i++) {
-                // Find the number of matches:
-                int cardCopies = findCopies(inputStrings, i);
-
-                // Increment the card count accordingly:
-                totalScore += cardCopies;
-
-                // Test code:
-                if (testing) {
-                    System.out.println("Card String: " + inputStrings.get(i));
-                    System.out.println("Copies found: " + cardCopies);
+                // Find the number of matches for that card:
+                int matches = findMatches(inputStrings.get(i));
+                // Add that many copies of the subsequent cards:
+                for (int j = 1; j <= matches; j++) {
+                    cardCopyList[i + j] += cardCopyList[i];
                 }
+            }
+
+            // Calculate the total score, which is the total number of cards:
+            for (int count : cardCopyList) {
+                totalScore += count;
             }
         }
 
@@ -77,8 +83,7 @@ class day4 {
     }
 
     public static int findMatches(String cardString) {
-        // Finds the winning value of a given card, if any.
-        // Changed for Part 2: returns the number of matches, NOT the score.
+        // Finds and returns the number of matches for the given card.
 
         // Separate the card name and number from the string:
         String[] firstSplit = cardString.split(":");
