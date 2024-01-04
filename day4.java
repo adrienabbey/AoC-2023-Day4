@@ -56,6 +56,10 @@ class day4 {
             for (int count : cardCopyList) {
                 totalScore += count;
             }
+
+            if (testing) {
+                System.out.println(" Final card count is: " + Arrays.toString(cardCopyList));
+            }
         }
 
         // Print out the score result:
