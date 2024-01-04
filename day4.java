@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 class day4 {
     /* Global Variables */
-    public static String inputFileName = "input.txt";
+    public static String inputFileName = "example-input.txt";
     public static boolean testing = false;
     public static boolean partTwo = true;
 
@@ -27,7 +27,7 @@ class day4 {
             // For each string in the input:
             for (String cardString : inputStrings) {
                 // Find the card's value:
-                int matches = findCardValue(cardString);
+                int matches = findMatches(cardString);
 
                 // Add that card's value to the total score:
                 totalScore += Math.pow(2, matches - 1);
@@ -35,13 +35,19 @@ class day4 {
         } else {
             // Calculate using Part Two's method.
 
-            // Track the number of cards:
-            int cardCount = inputStrings.size();
-
             // For every string in the input:
             for (int i = 0; i < inputStrings.size(); i++) {
                 // Find the number of matches:
-                int matches = findCardValue(inputStrings.get(i));
+                int cardCopies = findCopies(inputStrings, i);
+
+                // Increment the card count accordingly:
+                totalScore += cardCopies;
+
+                // Test code:
+                if (testing) {
+                    System.out.println("Card String: " + inputStrings.get(i));
+                    System.out.println("Copies found: " + cardCopies);
+                }
             }
         }
 
@@ -70,7 +76,7 @@ class day4 {
         return inputStrings;
     }
 
-    public static int findCardValue(String cardString) {
+    public static int findMatches(String cardString) {
         // Finds the winning value of a given card, if any.
         // Changed for Part 2: returns the number of matches, NOT the score.
 
@@ -86,7 +92,6 @@ class day4 {
 
         // Track the number of matches:
         int matches = 0;
-        double cardValue = 0;
 
         // Check the lists for any matches:
         for (String winningNumber : winningNumbers) {
@@ -113,11 +118,35 @@ class day4 {
             System.out.println(" Given numbers: " + Arrays.toString(givenNumbers));
             System.out.println(" Winning numbers; " + Arrays.toString(winningNumbers));
             System.out.println(" Matches: " + matches);
-            System.out.println(" Card value: " + cardValue);
             System.out.println(" - ");
         }
 
         // Return the number of matches:
         return matches;
+    }
+
+    public static int findCopies(ArrayList<String> cardList, int cardIndex) {
+        // Looks at the card in the card list, determining the number of matches
+        // it has, then calculates the number of copies it creates recursively.
+        // It then returns the total number of card copies created by itself and
+        // all its created copies, if any. If no copies are found, it still
+        // returns 1 (itself).
+
+        // Track how many copies to return:
+        int copies = 1;
+
+        // Find the number of matches for the given card:
+        int matches = findMatches(cardList.get(cardIndex));
+
+        // Recursively determine how many copies to add based on matches:
+        for (int i = matches; i > 0; i--) {
+            if (cardIndex + i < cardList.size()) {
+                int additionalMatches = findCopies(cardList, cardIndex + i);
+                copies += additionalMatches;
+            }
+        }
+
+        // Return the total number of card copies created:
+        return copies;
     }
 }
