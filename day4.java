@@ -13,6 +13,7 @@ class day4 {
     /* Global Variables */
     public static String inputFileName = "input.txt";
     public static boolean testing = false;
+    public static boolean partTwo = true;
 
     public static void main(String[] args) throws FileNotFoundException {
         // Load the input file into an array list of strings:
@@ -21,13 +22,27 @@ class day4 {
         // Track the total score sum:
         int totalScore = 0;
 
-        // For each string in the input:
-        for (String cardString : inputStrings) {
-            // Find the card's value:
-            int cardValue = findCardValue(cardString);
+        // Calculate using Part One's method:
+        if (!partTwo) {
+            // For each string in the input:
+            for (String cardString : inputStrings) {
+                // Find the card's value:
+                int matches = findCardValue(cardString);
 
-            // Add that card's value to the total score:
-            totalScore += cardValue;
+                // Add that card's value to the total score:
+                totalScore += Math.pow(2, matches - 1);
+            }
+        } else {
+            // Calculate using Part Two's method.
+
+            // Track the number of cards:
+            int cardCount = inputStrings.size();
+
+            // For every string in the input:
+            for (int i = 0; i < inputStrings.size(); i++) {
+                // Find the number of matches:
+                int matches = findCardValue(inputStrings.get(i));
+            }
         }
 
         // Print out the score result:
@@ -57,6 +72,7 @@ class day4 {
 
     public static int findCardValue(String cardString) {
         // Finds the winning value of a given card, if any.
+        // Changed for Part 2: returns the number of matches, NOT the score.
 
         // Separate the card name and number from the string:
         String[] firstSplit = cardString.split(":");
@@ -91,11 +107,6 @@ class day4 {
             }
         }
 
-        // Calculate the card's value:
-        if (matches > 0) {
-            cardValue = Math.pow(2, matches - 1);
-        }
-
         // Test code:
         if (testing) {
             System.out.println(" Card string: " + cardString);
@@ -106,7 +117,7 @@ class day4 {
             System.out.println(" - ");
         }
 
-        // Return the card's value:
-        return (int) cardValue;
+        // Return the number of matches:
+        return matches;
     }
 }
